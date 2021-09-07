@@ -3,50 +3,26 @@ import BlogList from './BlogList';
 
 const Home = () => {
     const [blogs, setBlogs] = useState(null);
-
-    const [name, setName] = useState('mario');
-
-    const handleDelete = (id) => {
-        const newBlogs = blogs.filter((blog) => blog.id !== id);
-        setBlogs(newBlogs);
-    };
+    const [isPending, setIsPending] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:8000/blogs')
-            .then((res) => {
-                return res.json();
-            })
-            .then((data) => {
-                console.log('Fetching data:', data);
-                setBlogs(data);
-            });
+        setTimeout(() => {
+            fetch('http://localhost:8000/blogs')
+                .then((res) => {
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log('Fetching data:', data);
+                    setBlogs(data);
+                    setIsPending(false);
+                });
+        }, 1000);
     }, []);
 
     return (
         <div className='home'>
-            {blogs && (
-                <BlogList
-                    blogs={blogs}
-                    title='All Blogs'
-                    handleDelete={handleDelete}
-                />
-            )}
-            <p>{name}</p>
-            <button onClick={() => setName('luigi')}>Change name</button>
-            {blogs && (
-                <BlogList
-                    blogs={blogs.filter((blog) => blog.author === 'mario')}
-                    title="Mario's Blogs"
-                    handleDelete={handleDelete}
-                />
-            )}
-            {blogs && (
-                <BlogList
-                    blogs={blogs.filter((blog) => blog.author === 'yoshi')}
-                    title="Yoshi's Blogs"
-                    handleDelete={handleDelete}
-                />
-            )}
+            {isPending && <div>Loading...</div>}
+            {blogs && <BlogList blogs={blogs} title='All Blogs' />}
         </div>
     );
 };
