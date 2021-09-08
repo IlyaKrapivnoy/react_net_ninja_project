@@ -41,7 +41,8 @@
 
 .home,
 .create,
-.blog-details {
+.blog-details,
+.not-found {
     max-width: 600px;
     margin: 30px auto;
 }
